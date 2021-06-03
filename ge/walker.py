@@ -26,7 +26,7 @@ class RandomWalker:
 
     def deepwalk_walk(self, walk_length, start_node):
 
-        walk = [start_node]
+        walk = [start_node] # put in the first node into the walk sequence
 
         while len(walk) < walk_length:
             cur = walk[-1]
@@ -131,9 +131,14 @@ class RandomWalker:
         return walks
 
     def _simulate_walks(self, nodes, num_walks, walk_length,):
-        walks = []
+        walks = [] # results in sequence with [[1*walk_length]*num_walks]
+        count = 0
         for _ in range(num_walks):
-            random.shuffle(nodes)
+
+            random.shuffle(nodes) # random the node sequence in every walks
+            count += 1
+            if count == 1 or count == 2:
+                print(nodes)
             for v in nodes:
                 if self.p == 1 and self.q == 1:
                     walks.append(self.deepwalk_walk(
