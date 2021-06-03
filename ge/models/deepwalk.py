@@ -19,6 +19,7 @@ Reference:
 """
 from ..walker import RandomWalker
 from gensim.models import Word2Vec
+
 import pandas as pd
 
 
@@ -29,10 +30,11 @@ class DeepWalk:
         self.w2v_model = None
         self._embeddings = {}
 
+        # random walk sampling sequence, sampling rate = 1
         self.walker = RandomWalker(
-            graph, p=1, q=1, )
+            graph, p=1, q=1, )  # call and initiate RandomWalker class with graph
         self.sentences = self.walker.simulate_walks(
-            num_walks=num_walks, walk_length=walk_length, workers=workers, verbose=1)
+            num_walks=num_walks, walk_length=walk_length, workers=workers, verbose=0)  ## generate embedded vectors
 
     def train(self, embed_size=128, window_size=5, workers=3, iter=5, **kwargs):
 
@@ -53,12 +55,17 @@ class DeepWalk:
         return model
 
     def get_embeddings(self,):
+        # count = 0
         if self.w2v_model is None:
             print("model not train")
             return {}
 
         self._embeddings = {}
         for word in self.graph.nodes():
-            self._embeddings[word] = self.w2v_model.wv[word]
+            # print(word)
+            self._embeddings[word] = self.w2v_model.wv[word] ## wv
+            # count += 1
+            # print(self._embeddings)
+        # print(count)
 
         return self._embeddings

@@ -5,6 +5,8 @@ from ge.classify import read_node_label, Classifier
 from ge import DeepWalk
 from sklearn.linear_model import LogisticRegression
 
+import matplotlib
+matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 import networkx as nx
 from sklearn.manifold import TSNE
@@ -44,10 +46,20 @@ def plot_embeddings(embeddings,):
 if __name__ == "__main__":
     G = nx.read_edgelist('../data/wiki/Wiki_edgelist.txt',
                          create_using=nx.DiGraph(), nodetype=None, data=[('weight', int)])
+    print(list(G.neighbors('1')))
+    print(list(G.neighbors('0')))
+    ##
+    # G： [(start,end,{weight}),(start,end,{weight},...] 无权有向网
+    # read in Graph data
+    # print(list(G.edges(data=True)))
 
     model = DeepWalk(G, walk_length=10, num_walks=80, workers=1)
-    model.train(window_size=5, iter=3)
-    embeddings = model.get_embeddings()
 
+    #  random walk for sampling the sequence, sampling rate = 1
+    model.train(window_size=5, iter=3)
+    # # print(model)
+    embeddings = model.get_embeddings()
+    # # print(np.shape(embeddings))
+    # #
     evaluate_embeddings(embeddings)
     plot_embeddings(embeddings)
